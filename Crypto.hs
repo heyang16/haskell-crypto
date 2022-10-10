@@ -18,19 +18,22 @@ via the aymmetric RSA.
 -------------------------------------------------------------------------------
 -- PART 1 : asymmetric encryption
 
+--Returns the greatest common divisor between m and n
 gcd :: Int -> Int -> Int
 gcd m n
   | n == 0 = m
-  | otherwise = gcd n (m mod n)
+  | otherwise = gcd n (m `mod` n)
 
+--Returns the number of integers in the range 1 to x inclusive
+--that are relatively prime to x
 phi :: Int -> Int
-phi
-  = undefined
+phi x
+  = length [y | y <- [2..(x+1)], gcd x y == 1]
 
 -- Calculates (u, v, d) the gcd (d) and Bezout coefficients (u and v)
 -- such that au + bv = d
 computeCoeffs :: Int -> Int -> (Int, Int)
-computeCoeffs
+computeCoeffs a b
   = undefined
 
 -- Inverse of a modulo m
@@ -40,13 +43,16 @@ inverse
 
 -- Calculates (a^k mod m)
 modPow :: Int -> Int -> Int -> Int
-modPow
-  = undefined
+modPow a k m
+  | k == 0 = 1 `mod` m
+  | k == 1 = a `mod` m
+  | even k = modPow ((a ^ 2) `mod` m) (k `div` 2) m
+  | otherwise = a * (modPow ((a ^ 2) `mod` m) (k `div` 2) m) `mod` m
 
--- Returns the smallest integer that is coprime with phi
+-- Returns the smallest integer that is coprime withs phi
 smallestCoPrimeOf :: Int -> Int
-smallestCoPrimeOf x
-  = 
+smallestCoPrimeOf phi
+  = head [y | y <- [2..(phi+1)], gcd phi y == 1]
 
 -- Generates keys pairs (public, private) = ((e, n), (d, n))
 -- given two "large" distinct primes, p and q
