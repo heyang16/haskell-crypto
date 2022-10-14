@@ -28,7 +28,7 @@ gcd m n
 --that are relatively prime to x
 phi :: Int -> Int
 phi x
-  = length [y | y <- [2..(x+1)], gcd x y == 1]
+  = length [y | y <- [1..x], gcd x y == 1]
 
 -- Calculates (u, v, d) the gcd (d) and Bezout coefficients (u and v)
 -- such that au + bv = d
@@ -47,12 +47,14 @@ inverse a m
   | otherwise = let (u, v) = computeCoeffs a m in u `mod` m
 
 -- Calculates (a^k mod m)
+-- Returns undefined if m is 0
 modPow :: Int -> Int -> Int -> Int
+modPow a k 0 = undefined
 modPow a 0 m = 1 `mod` m -- base cases
 modPow a 1 m = a `mod` m -- base cases
 modPow a k m
   | even k = modPow n (k `div` 2) m --recursive steps
-  | otherwise = a * modPow n (k `div` 2) m `mod` m --recursive steps
+  | otherwise = a `mod` m * modPow n (k `div` 2) m `mod` m --recursive steps
   where
     n = (a `mod` m ) ^ 2 `mod` m
 
